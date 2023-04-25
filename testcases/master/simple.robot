@@ -106,7 +106,9 @@ Input address
     
 Submit    
     Click Element    //*[@type='submit']
-
+Check disable 
+    Submit
+    Element Should Be Disabled    //*[@id="create_account_button"]
 
 
 *** Test Cases ***
@@ -139,17 +141,31 @@ Send input to form
     Sleep    1s
 
     # Setup username
+    Check disable 
     Input username 1
+    
+    Check disable 
+
     Click UserType Trainee
+    Check disable 
     Input password
+    Check disable 
     Input confirm password incorrect
+    Check disable 
     Input confirm password correct
+    Check disable 
     Input firstname wrong
+    Check disable 
     Input lastname wrong
+    Check disable 
     Input date wrong
+    Check disable 
     Input citizenId wrong
+    Check disable 
     Input phoneNumber wrong
+    Check disable 
     Click gender female
+    Check disable 
     Input address
     Submit
     # Sleep    2s
