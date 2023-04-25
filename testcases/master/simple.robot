@@ -5,85 +5,208 @@ Resource    ../../testdata/environment.robot
 Resource    ../../testdata/test_data.robot
 
 
-*** Test Cases ***
-Open Browser To Form
-    [Tags]    all input
-    Open Browser    ${WEB_URL}     chrome
-    # To open browser without closing
-    # Open Browser
-    # ...    https://form.jotform.com/212934779973474
-    # ...    chrome
-    # ...    options=add_experimental_option("detach", True)
-    Maximize Browser Window
-
-Wait student registration load complete
-    # Open Browser    ${WEB_URL}     chrome
-    Wait Until Page Contains    Hello 
-
-Send input to form
-    Open Browser    ${WEB_URL}     chrome
-    Wait Until Page Contains    Hello 
+*** Keywords ***
+Input username 1
     Input text     //*[@name='username']    user1000
     ${username}=    Get Value    //*[@name='username']
     Should Be Equal    ${username}    user1000
 
-    Click Element    //*[@class='h-6 w-6']
-     Sleep    0.5s
-    # Wait Until Keyword Succeeds    10s    1s    Element Should Be Visible    css=button[id='headlessui-listbox-button-:r0:']
-    # ${aria_expand}    Get Element Attribute    css=button[id='headlessui-listbox-button-:r0:']    aria-expand
-    # Wait Until Keyword Succeeds    10s    1s    Should Be Equal As Strings    ${aria_expand}    true
-
-    Click Element    //*[@class='inline-flex items-center']
-    
-    # ${UserType}=    Get Value    //*[@class='block text-black']
-    # Should Be Equal    ${UserType}    Trainee
-
+Input password 
     Input text     //*[@name='password']    123456789
     ${password}=    Get Value    //*[@name='password']
     Should Be Equal    ${password}    123456789
-
-    #password not match 
-    Input text     //*[@name='confirmPassword']    987654321
-    ${password}=    Get Value    //*[@name='confirmPassword']
-    Should Be Equal    ${password}    987654321
-
-    Wait Until Page Contains    Password does not match. 
-    Sleep    0.5s
-
-
+    
+Input confirm password correct 
     Input text     //*[@name='confirmPassword']    123456789
     ${password}=    Get Value    //*[@name='confirmPassword']
     Should Be Equal    ${password}    123456789
+Input confirm password incorrect 
+    Input text     //*[@name='confirmPassword']    987654321
+    ${password}=    Get Value    //*[@name='confirmPassword']
+    Should Be Equal    ${password}    987654321
+Click UserType Trainer
+    Click Element    //*[@id='userType_arrow']
+    Click Element    //*[@id='userType_choice_1']
+    Click Element At Coordinates    //*[@name='username']    0    0
 
-    # input name
-    Input text     //*[@name='firstname']    nat
+Click UserType Trainee
+    Click Element    //*[@id='userType_arrow']
+    Click Element    //*[@id='userType_choice_2']
+    Click Element At Coordinates    //*[@name='username']    0    0
+
+Click gender male
+    Click Element    //*[@id='gender_arrow']
+    Click Element    //*[@id='gender_choice_1']
+    Click Element At Coordinates    //*[@name='username']    0    0
+Click gender female
+    Click Element    //*[@id='gender_arrow']
+    Click Element    //*[@id='gender_choice_2']
+    Click Element At Coordinates    //*[@name='username']    0    0
+Click gender other
+    Click Element    //*[@id='gender_arrow']
+    Click Element    //*[@id='gender_choice_3']
+    Click Element At Coordinates    //*[@name='username']    0    0
+
+Input date wrong
+    Execute JavaScript  document.getElementById('birthdate').value = '2666-12-12'
+
+Input date 
+    Execute JavaScript  document.getElementById('birthdate').value = '2000-12-12'
+
+Input firstname 
+    Input text     //*[@name='firstname']    testFirstname
     ${firstname}=    Get Value    //*[@name='firstname']
-    Should Be Equal    ${firstname}    nat
+    Should Be Equal    ${firstname}    testFirstname
+Input firstname wrong 
+    Input text     //*[@name='firstname']    testFirstname1
+    ${firstname}=    Get Value    //*[@name='firstname']
+    Should Be Equal    ${firstname}    testFirstname1
 
-    Input text     //*[@name='lastname']    haha
+Input lastname wrong
+    Input text     //*[@name='lastname']    testLastname
     ${lastname}=    Get Value    //*[@name='lastname']
-    Should Be Equal    ${lastname}    haha
+    Should Be Equal    ${lastname}    testLastname
 
-    #input date  
-    # Input text     //*[@name='birthdate']    2000-12-12
-    # ${birthdate}=    Get Value    //*[@name='birthdate']
-    # Should Be Equal    ${birthdate}    haha
+Input lastname
+    Input text     //*[@name='lastname']    testLastname
+    ${lastname}=    Get Value    //*[@name='lastname']
+    Should Be Equal    ${lastname}    testLastname
 
+Input citizenId 
     Input text     //*[@name='citizenId']    1234567890123
     ${citizenId}=    Get Value    //*[@name='citizenId']
     Should Be Equal    ${citizenId}    1234567890123
 
+Input phoneNumber wrong
+    Input text     //*[@name='phoneNumber']    09843
+    ${phoneNumber}=    Get Value    //*[@name='phoneNumber']
+    Should Be Equal    ${phoneNumber}    09843
+Input phoneNumber 
     Input text     //*[@name='phoneNumber']    0984358769
     ${phoneNumber}=    Get Value    //*[@name='phoneNumber']
     Should Be Equal    ${phoneNumber}    0984358769
 
+Input address
     Input text     //*[@name='address']    Somerset Road, 111 Somerset, Singapore
     ${address}=    Get Value    //*[@name='address']
     Should Be Equal    ${address}   Somerset Road, 111 Somerset, Singapore
+
+Input rest 
+    Input firstname 
+    Input Lastname
+    Input citizenId
+    Input phoneNumber
+    Input address
+
+*** Test Cases ***
+Open Browser To Form
+    [Tags]    all input
+    Open Browser    ${WEB_URL}     chrome
+
+    Maximize Browser Window
+
+Wait student registration load complete
+    # Open Browser    ${WEB_URL}     chrome
+    # Wait Until Page Contains    Hello 
+    Open Browser    ${WEB_URL}     chrome
+
+    Wait Until Page Contains    Welcome 
+    Click Link    //*[@href="/account/signup"]
+    # wait for loading
+    Wait Until Page Contains    Hello 
+
+
+
+Send input to form
+    Open Browser    ${WEB_URL}     chrome
+
+    Wait Until Page Contains    Welcome 
+    Click Link    //*[@href="/account/signup"]
+    # wait for loading
+    Wait Until Page Contains    Hello 
+
+    # date
+    # Input text     //*[@name='birthdate']    2000-12-12
+    # ${birthdate}=    Get Value    //*[@name='birthdate']
+    # Should Be Equal    ${birthdate}    haha
+
+    Input username 1
+
+    Execute JavaScript  document.getElementById('birthdate').value = '2000-12-12'
+
+    Click UserType Trainee
+    Click gender female
+
+
+
+    # Click Element    //*[@id='userType_arrow']
+   
+    # Click Element    //*[@id='userType_choice_2']
+    # Click Element At Coordinates    //*[@name='username']    0    0
+
+    # # ${UserType}=    Get Value    //*[@id='selected_userType']
+    # # Should Be Equal    ${UserType}    Trainer
+
+    # Click Element    //*[@id='gender_arrow']
+    # Click Element    //*[@id='gender_choice_1']
+    # Click Element At Coordinates    //*[@name='username']    0    0
+    Click UserType Trainee
+    Click gender female
+
+    # Input text     //*[@name='password']    123456789
+    # ${password}=    Get Value    //*[@name='password']
+    # Should Be Equal    ${password}    123456789
+
+    # #password not match 
+    # Input text     //*[@name='confirmPassword']    987654321
+    # ${password}=    Get Value    //*[@name='confirmPassword']
+    # Should Be Equal    ${password}    987654321
+
+    # Wait Until Page Contains    Password does not match. 
+    # Sleep    0.5s
+
+
+    # Input text     //*[@name='confirmPassword']    123456789
+    # ${password}=    Get Value    //*[@name='confirmPassword']
+    # Should Be Equal    ${password}    123456789
+
+    # # input name
+    # Input text     //*[@name='firstname']    nat1
+    # ${firstname}=    Get Value    //*[@name='firstname']
+    # Should Be Equal    ${firstname}    nat1
+
+    # Input text     //*[@name='lastname']    haha
+    # ${lastname}=    Get Value    //*[@name='lastname']
+    # Should Be Equal    ${lastname}    haha
+
+    # #input date  
+    # # Input text     //*[@name='birthdate']    2000-12-12
+    # # ${birthdate}=    Get Value    //*[@name='birthdate']
+    # # Should Be Equal    ${birthdate}    haha
+
+    # Input text     //*[@name='citizenId']    1234567890123
+    # ${citizenId}=    Get Value    //*[@name='citizenId']
+    # Should Be Equal    ${citizenId}    1234567890123
+
+    # Input text     //*[@name='phoneNumber']    0984358769
+    # ${phoneNumber}=    Get Value    //*[@name='phoneNumber']
+    # Should Be Equal    ${phoneNumber}    0984358769
+
+    # Input text     //*[@name='address']    Somerset Road, 111 Somerset, Singapore
+    # ${address}=    Get Value    //*[@name='address']
+    # Should Be Equal    ${address}   Somerset Road, 111 Somerset, Singapore
     
     
 
     Click Element    //*[@type='submit']
+
+    # Wait Until Page Contains    firstName invalid
+
+    # Click Button    Show Alert
+    # Wait Until Alert Is Present    xxxx
+    Handle Alert    accept
+
+    Sleep    5s
     
 
 
